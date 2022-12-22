@@ -14,6 +14,10 @@
             this.position = null;
             countMoves = 0;
         }
+        public void increseCountMoves()
+        {
+            countMoves++;
+        }
     }
 
 }

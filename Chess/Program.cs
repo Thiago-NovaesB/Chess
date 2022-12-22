@@ -3,8 +3,25 @@ using Chess;
 using Chess.BoardAndPieces;
 using Chess.Game;
 
-Board board = new Board(8, 8);
-board.addPiece(new King(board, Color.Black), new Position(0, 0));
-board.addPiece(new King(board, Color.White), new Position(1, 0));
+try
+{
+    Match match = new Match();
+    while (!match.finished)
+    {
+        Console.Clear();
+        Canvas.printBoard(match.board);
+        Console.WriteLine();
+        Console.Write("Origin: ");
+        Position origin = Canvas.readChessPosition().toPosition();
+        Console.Write("Destiny: ");
+        Position destiny = Canvas.readChessPosition().toPosition();
 
-Canvas.printBoard(board);
+        match.executeMove(origin, destiny);
+
+    }
+}
+catch (BoardException e)
+{
+    Console.WriteLine(e.Message);
+}
+

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using Chess.BoardAndPieces;
+using Chess.Game;
 
 namespace Chess
 {
@@ -27,6 +28,14 @@ namespace Chess
                 Console.WriteLine();
             }
             Console.WriteLine("  A B C D E F G H");
+        }
+
+        public static ChessPosition readChessPosition()
+        {
+            string? s = Console.ReadLine();
+            char column = s[0];
+            int line = int.Parse(s[1].ToString());
+            return new ChessPosition(column, line);
         }
 
         public static void printPiece(Piece piece)
