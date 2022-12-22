@@ -5,6 +5,6 @@ using Chess.Game;
 
 Board board = new Board(8, 8);
 board.addPiece(new King(board, Color.Black), new Position(0, 0));
-board.addPiece(new Rook(board, Color.Black), new Position(6, 7));
+board.addPiece(new King(board, Color.White), new Position(1, 0));
 
 Canvas.printBoard(board);
