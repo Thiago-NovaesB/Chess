@@ -10,9 +10,17 @@ try
     {
         Console.Clear();
         Canvas.printBoard(match.board);
+
         Console.WriteLine();
         Console.Write("Origin: ");
         Position origin = Canvas.readChessPosition().toPosition();
+
+        bool[,] possiblePositions = match.board.piece(origin).possibleMoves();
+
+        Console.Clear();
+        Canvas.printBoard(match.board, possiblePositions);
+
+        Console.WriteLine();
         Console.Write("Destiny: ");
         Position destiny = Canvas.readChessPosition().toPosition();
 

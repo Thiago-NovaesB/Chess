@@ -10,5 +10,11 @@ namespace Chess.Game
         {
             return "N";
         }
+
+        public override bool[,] possibleMoves()
+        {
+            bool[,] mat = new bool[board.lines, board.columns];
+            return mat;
+        }
     }
 }

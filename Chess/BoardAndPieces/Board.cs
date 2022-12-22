@@ -37,11 +37,15 @@
             {
                 return null;
             }
-            Console.WriteLine(pos);
-            Piece? temp = piece(pos);
-            temp.position = null;
-            pieces[pos.line, pos.column] = null;
-            return temp;
+            else
+            {
+                Console.WriteLine(pos);
+                Piece temp = piece(pos);
+                temp.position = null;
+                pieces[pos.line, pos.column] = null;
+                return temp;
+            }
+            
         }
 
         public bool existPiece(Position pos)
