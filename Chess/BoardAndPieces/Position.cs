@@ -1,4 +1,4 @@
-﻿namespace Chess.Board
+﻿namespace Chess.BoardAndPieces
 {
     internal class Position
     {
