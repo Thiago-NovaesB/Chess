@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection.PortableExecutable;
 using Chess.BoardAndPieces;
 
 namespace Chess.Game
@@ -11,6 +12,7 @@ namespace Chess.Game
         public bool finished { get; private set; }
         private HashSet<Piece> pieces;
         private HashSet<Piece> captured;
+        public bool check { get; private set; }
 
         public Match()
         {
@@ -21,23 +23,49 @@ namespace Chess.Game
             captured = new HashSet<Piece>();
             initialPosition();
             finished = false;
+            check = false;
         }
 
-        public void executeMove(Position origin, Position destiny)
+        public Piece executeMove(Position origin, Position destiny)
         {
             Piece? p = board.removePiece(origin);
-            p.increseCountMoves();
-            Piece pieceRemoved = board.removePiece(destiny);
+            p.increaseCountMoves();
+            Piece capturedPiece = board.removePiece(destiny);
             board.addPiece(p, destiny);
-            if (pieceRemoved != null)
+            if (capturedPiece != null)
             {
-                captured.Add(pieceRemoved);
+                captured.Add(capturedPiece);
             }
+            return capturedPiece;
+        }
+        public void undoMove(Position origin, Position destiny, Piece? capturedPiece)
+        {
+            Piece? p = board.removePiece(destiny);
+            p.decreaseCountMoves();
+            if (capturedPiece != null)
+            {
+                board.addPiece(capturedPiece, destiny);
+                captured.Remove(capturedPiece);
+            }
+            board.addPiece(p, origin);
         }
 
         public void playerTime(Position origin, Position destiny)
         {
-            executeMove(origin, destiny);
+            Piece capturedPiece = executeMove(origin, destiny);
+            if (isInCheck(currentPlayer))
+            {
+                undoMove(origin, destiny, capturedPiece);
+                throw new BoardException("You can't put yourself in check!");
+            }
+            if (isInCheck(opponent(currentPlayer)))
+            {
+                check = true;
+            }
+            else
+            {
+                check = false;
+            }
             turn++;
             changePlayer();
         }
@@ -105,6 +133,46 @@ namespace Chess.Game
             return temp;
         }
 
+        private Color opponent(Color color)
+        {
+            if (color == Color.White)
+                return Color.Black;
+            else
+            {
+                return Color.White;
+            }
+        }
+
+        private Piece? king(Color color)
+        {
+            foreach (Piece p in inGamePieces(color))
+            {
+                if (p is King)
+                {
+                    return p;
+                }
+            }
+            return null;
+        }
+
+        public bool isInCheck(Color color)
+        {
+            Piece K = king(color);
+            if (K == null)
+            {
+                throw new BoardException("Missing King!");
+            }
+            foreach (Piece p in inGamePieces(opponent(color)))
+            {
+                bool[,] temp = p.possibleMoves();
+                if (temp[K.position.line, K.position.column])
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public void addNewPiece(Piece piece, char column, int line)
         {
             board.addPiece(piece, new ChessPosition(column, line).toPosition());
@@ -122,14 +190,14 @@ namespace Chess.Game
             addNewPiece(new Queen(board, Color.White), 'D', 1);
             addNewPiece(new King(board, Color.White), 'E', 1);
 
-            addNewPiece(new Pawn(board, Color.White), 'A', 2);
+            /*addNewPiece(new Pawn(board, Color.White), 'A', 2);
             addNewPiece(new Pawn(board, Color.White), 'H', 2);
             addNewPiece(new Pawn(board, Color.White), 'B', 2);
             addNewPiece(new Pawn(board, Color.White), 'G', 2);
             addNewPiece(new Pawn(board, Color.White), 'C', 2);
             addNewPiece(new Pawn(board, Color.White), 'F', 2);
             addNewPiece(new Pawn(board, Color.White), 'D', 2);
-            addNewPiece(new Pawn(board, Color.White), 'E', 2);
+            addNewPiece(new Pawn(board, Color.White), 'E', 2);*/
 
             addNewPiece(new Rook(board, Color.Black), 'A', 8);
             addNewPiece(new Rook(board, Color.Black), 'H', 8);
@@ -140,14 +208,14 @@ namespace Chess.Game
             addNewPiece(new Queen(board, Color.Black), 'D', 8);
             addNewPiece(new King(board, Color.Black), 'E', 8);
 
-            addNewPiece(new Pawn(board, Color.Black), 'A', 7);
+            /*addNewPiece(new Pawn(board, Color.Black), 'A', 7);
             addNewPiece(new Pawn(board, Color.Black), 'H', 7);
             addNewPiece(new Pawn(board, Color.Black), 'B', 7);
             addNewPiece(new Pawn(board, Color.Black), 'G', 7);
             addNewPiece(new Pawn(board, Color.Black), 'C', 7);
             addNewPiece(new Pawn(board, Color.Black), 'F', 7);
             addNewPiece(new Pawn(board, Color.Black), 'D', 7);
-            addNewPiece(new Pawn(board, Color.Black), 'E', 7);
+            addNewPiece(new Pawn(board, Color.Black), 'E', 7);*/
         }
     }
 }

@@ -14,9 +14,14 @@
             this.position = null;
             countMoves = 0;
         }
-        public void increseCountMoves()
+        public void increaseCountMoves()
         {
             countMoves++;
+        }
+
+        public void decreaseCountMoves()
+        {
+            countMoves--;
         }
 
         public bool existPossibleMove()

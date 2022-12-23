@@ -39,7 +39,6 @@
             }
             else
             {
-                Console.WriteLine(pos);
                 Piece temp = piece(pos);
                 temp.position = null;
                 pieces[pos.line, pos.column] = null;
