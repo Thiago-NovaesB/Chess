@@ -18,7 +18,6 @@ namespace Chess.Game
         public override bool[,] possibleMoves()
         {
             bool[,] mat = new bool[board.lines, board.columns];
-
             Position pos = new Position(0, 0);
 
             // up
@@ -32,7 +31,6 @@ namespace Chess.Game
                 }
                 pos.line--;
             }
-            return mat;
 
             // down
             pos.setPosition(position.line + 1, position.column);
@@ -45,7 +43,6 @@ namespace Chess.Game
                 }
                 pos.line++;
             }
-            return mat;
 
             // right
             pos.setPosition(position.line, position.column + 1);
@@ -58,7 +55,6 @@ namespace Chess.Game
                 }
                 pos.column++;
             }
-            return mat;
 
             // left
             pos.setPosition(position.line, position.column - 1);

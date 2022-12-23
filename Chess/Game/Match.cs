@@ -1,4 +1,5 @@
-﻿using Chess.BoardAndPieces;
+﻿using System.Collections.Generic;
+using Chess.BoardAndPieces;
 
 namespace Chess.Game
 {
@@ -8,12 +9,16 @@ namespace Chess.Game
         public int turn { get; private set; }
         public Color currentPlayer { get; private set; }
         public bool finished { get; private set; }
+        private HashSet<Piece> pieces;
+        private HashSet<Piece> captured;
 
         public Match()
         {
             board = new Board(8,8);
             turn = 1;
             currentPlayer = Color.White;
+            pieces = new HashSet<Piece>();
+            captured = new HashSet<Piece>();
             initialPosition();
             finished = false;
         }
@@ -24,6 +29,10 @@ namespace Chess.Game
             p.increseCountMoves();
             Piece pieceRemoved = board.removePiece(destiny);
             board.addPiece(p, destiny);
+            if (pieceRemoved != null)
+            {
+                captured.Add(pieceRemoved);
+            }
         }
 
         public void playerTime(Position origin, Position destiny)
@@ -69,44 +78,76 @@ namespace Chess.Game
             }
            
         }
+
+        public HashSet<Piece> capturedPieces(Color color)
+        {
+            HashSet<Piece> temp = new HashSet<Piece>();
+            foreach (Piece p in captured)
+            {
+                if (p.color == color)
+                {
+                    temp.Add(p);
+                }
+            }
+            return temp;
+        }
+        public HashSet<Piece> inGamePieces(Color color)
+        {
+            HashSet<Piece> temp = new HashSet<Piece>();
+            foreach (Piece p in pieces)
+            {
+                if (p.color == color)
+                {
+                    temp.Add(p);
+                }
+            }
+            temp.ExceptWith(capturedPieces(color));
+            return temp;
+        }
+
+        public void addNewPiece(Piece piece, char column, int line)
+        {
+            board.addPiece(piece, new ChessPosition(column, line).toPosition());
+            pieces.Add(piece);
+        }
+
         private void initialPosition()
         {
-            board.addPiece(new Rook(board, Color.White), new ChessPosition('A', 1).toPosition());
-            board.addPiece(new Rook(board, Color.White), new ChessPosition('H', 1).toPosition());
-            board.addPiece(new Knight(board, Color.White), new ChessPosition('B', 1).toPosition());
-            board.addPiece(new Knight(board, Color.White), new ChessPosition('G', 1).toPosition());
-            board.addPiece(new Bishop(board, Color.White), new ChessPosition('C', 1).toPosition());
-            board.addPiece(new Bishop(board, Color.White), new ChessPosition('F', 1).toPosition());
-            board.addPiece(new Queen(board, Color.White), new ChessPosition('D', 1).toPosition());
-            board.addPiece(new King(board, Color.White), new ChessPosition('E', 1).toPosition());
+            addNewPiece(new Rook(board, Color.White), 'A', 1);
+            addNewPiece(new Rook(board, Color.White), 'H', 1);
+            addNewPiece(new Knight(board, Color.White),'B', 1);
+            addNewPiece(new Knight(board, Color.White), 'G', 1);
+            addNewPiece(new Bishop(board, Color.White), 'C', 1);
+            addNewPiece(new Bishop(board, Color.White), 'F', 1);
+            addNewPiece(new Queen(board, Color.White), 'D', 1);
+            addNewPiece(new King(board, Color.White), 'E', 1);
 
-            /*board.addPiece(new Pawn(board, Color.White), new ChessPosition('A', 2).toPosition());
-            board.addPiece(new Pawn(board, Color.White), new ChessPosition('H', 2).toPosition());
-            board.addPiece(new Pawn(board, Color.White), new ChessPosition('B', 2).toPosition());
-            board.addPiece(new Pawn(board, Color.White), new ChessPosition('G', 2).toPosition());
-            board.addPiece(new Pawn(board, Color.White), new ChessPosition('C', 2).toPosition());
-            board.addPiece(new Pawn(board, Color.White), new ChessPosition('F', 2).toPosition());
-            board.addPiece(new Pawn(board, Color.White), new ChessPosition('D', 2).toPosition());
-            board.addPiece(new Pawn(board, Color.White), new ChessPosition('E', 2).toPosition());*/
+            addNewPiece(new Pawn(board, Color.White), 'A', 2);
+            addNewPiece(new Pawn(board, Color.White), 'H', 2);
+            addNewPiece(new Pawn(board, Color.White), 'B', 2);
+            addNewPiece(new Pawn(board, Color.White), 'G', 2);
+            addNewPiece(new Pawn(board, Color.White), 'C', 2);
+            addNewPiece(new Pawn(board, Color.White), 'F', 2);
+            addNewPiece(new Pawn(board, Color.White), 'D', 2);
+            addNewPiece(new Pawn(board, Color.White), 'E', 2);
 
-            board.addPiece(new Rook(board, Color.Black), new ChessPosition('A', 8).toPosition());
-            board.addPiece(new Rook(board, Color.Black), new ChessPosition('H', 8).toPosition());
-            board.addPiece(new Knight(board, Color.Black), new ChessPosition('B', 8).toPosition());
-            board.addPiece(new Knight(board, Color.Black), new ChessPosition('G', 8).toPosition());
-            board.addPiece(new Bishop(board, Color.Black), new ChessPosition('C', 8).toPosition());
-            board.addPiece(new Bishop(board, Color.Black), new ChessPosition('F', 8).toPosition());
-            board.addPiece(new Queen(board, Color.Black), new ChessPosition('D', 8).toPosition());
-            board.addPiece(new King(board, Color.Black), new ChessPosition('E', 8).toPosition());
+            addNewPiece(new Rook(board, Color.Black), 'A', 8);
+            addNewPiece(new Rook(board, Color.Black), 'H', 8);
+            addNewPiece(new Knight(board, Color.Black), 'B', 8);
+            addNewPiece(new Knight(board, Color.Black), 'G', 8);
+            addNewPiece(new Bishop(board, Color.Black), 'C', 8);
+            addNewPiece(new Bishop(board, Color.Black), 'F', 8);
+            addNewPiece(new Queen(board, Color.Black), 'D', 8);
+            addNewPiece(new King(board, Color.Black), 'E', 8);
 
-            board.addPiece(new Pawn(board, Color.Black), new ChessPosition('A', 7).toPosition());
-            board.addPiece(new Pawn(board, Color.Black), new ChessPosition('H', 7).toPosition());
-            board.addPiece(new Pawn(board, Color.Black), new ChessPosition('B', 7).toPosition());
-            board.addPiece(new Pawn(board, Color.Black), new ChessPosition('G', 7).toPosition());
-            board.addPiece(new Pawn(board, Color.Black), new ChessPosition('C', 7).toPosition());
-            board.addPiece(new Pawn(board, Color.Black), new ChessPosition('F', 7).toPosition());
-            board.addPiece(new Pawn(board, Color.Black), new ChessPosition('D', 7).toPosition());
-            board.addPiece(new Pawn(board, Color.Black), new ChessPosition('E', 7).toPosition());
-
+            addNewPiece(new Pawn(board, Color.Black), 'A', 7);
+            addNewPiece(new Pawn(board, Color.Black), 'H', 7);
+            addNewPiece(new Pawn(board, Color.Black), 'B', 7);
+            addNewPiece(new Pawn(board, Color.Black), 'G', 7);
+            addNewPiece(new Pawn(board, Color.Black), 'C', 7);
+            addNewPiece(new Pawn(board, Color.Black), 'F', 7);
+            addNewPiece(new Pawn(board, Color.Black), 'D', 7);
+            addNewPiece(new Pawn(board, Color.Black), 'E', 7);
         }
     }
 }

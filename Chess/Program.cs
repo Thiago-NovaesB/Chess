@@ -11,11 +11,7 @@ try
         try
         {
             Console.Clear();
-            Canvas.printBoard(match.board);
-            Console.WriteLine();
-            Console.WriteLine("Turn: " + match.turn);
-            Console.WriteLine("Waiting: " + match.currentPlayer);
-
+            Canvas.printMatch(match);
 
             Console.WriteLine();
             Console.Write("Origin: ");

@@ -7,6 +7,39 @@ namespace Chess
 {
     internal class Canvas
     {
+        public static void printMatch(Match match)
+        {
+            printBoard(match.board);
+            Console.WriteLine();
+            printCapturedPieces(match);
+            Console.WriteLine();
+            Console.WriteLine("Turn: " + match.turn);
+            Console.WriteLine("Waiting: " + match.currentPlayer);
+        }
+        public static void printCapturedPieces(Match match)
+        {
+            Console.WriteLine("Captured Pieces:");
+            Console.Write("White: ");
+            printSet(match.capturedPieces(Color.White));
+            Console.WriteLine();
+            Console.Write("Black: ");
+            ConsoleColor temp = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            printSet(match.capturedPieces(Color.Black));
+            Console.ForegroundColor = temp;
+            Console.WriteLine();
+        }
+
+        public static void printSet(HashSet<Piece> set)
+        {
+            Console.Write("[");
+            foreach (Piece p in set)
+            {
+                Console.Write(p + " ");
+            }
+            Console.Write("]");
+        }
+
         public static void printBoard(Board board)
         {
             for (int i = 0; i < board.lines; i++)
